@@ -15,7 +15,22 @@ class App extends Component {
   render() {
     return (
       <div>
-        todo
+        <form>
+          <input type="text"/>
+          <button type="submit">Add Todo</button>
+        </form>
+
+        <ul>
+          <li>foo</li>
+          <li>bar</li>
+        </ul>
+
+        <div>
+          <span>Show:</span>
+          <a href="">All</a>
+          <a href="">Active</a>
+          <a href="">Completed</a>
+        </div>
       </div>
     );
   }
