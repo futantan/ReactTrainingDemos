@@ -22,7 +22,7 @@ class TextFieldSubmit extends React.Component {
           onClick={(evt) => {
             evt.preventDefault();
             this.props.addTodoItem(this.state.value);
-            this.setState({value: ''});
+            this.setState({ value: '' });
           }}
         >
           Add Todo
@@ -35,17 +35,26 @@ class TextFieldSubmit extends React.Component {
 const List = (props) => (
   <ul>
     {
-      props.items.map((item, index) => <Item
-        className={item.status === 'completed' ? 'cross-line' : ''}
-        key={index}
-        content={item.content}/>
+      props.items.map((item, index) =>
+        <Item
+          className={item.status === 'completed' ? 'cross-line' : ''}
+          key={index}
+          uuid={index}
+          content={item.content}
+          onItemClick={(index) => props.toggleTodo(index)}
+        />
       )
     }
   </ul>
 );
 
 const Item = (props) => (
-  <li className={props.className}>{props.content}</li>
+  <li
+    className={props.className}
+    onClick={() => props.onItemClick(props.uuid)}
+  >
+    {props.content}
+  </li>
 );
 
 class FilterContainer extends React.Component {
@@ -98,14 +107,31 @@ class App extends Component {
         <TextFieldSubmit addTodoItem={(content) => {
           this.setState({
             ...this.state,
-            todos: this.state.todos.concat({content, status: 'active'})
+            todos: this.state.todos.concat({ content, status: 'active' })
           });
         }}/>
+
         <List
           items={
-            this.state.todos.filter((item) => (this.state.filter === 'all') ? true : item.status === this.state.filter)
+            this.state.todos
+              .filter((item) => (this.state.filter === 'all') ? true : item.status === this.state.filter)
           }
+          toggleTodo={(index) => {
+            const targetTodo = this.state.todos[index];
+            const toggledStatus = (targetTodo.status === 'active' ? 'completed' : 'active');
+
+            this.setState({
+              ...this.state,
+              todos: [
+                ...this.state.todos.slice(0, index),
+                {...targetTodo, status: toggledStatus },
+                ...this.state.todos.slice(index + 1)
+              ],
+            });
+          }}
+
         />
+
         <FilterContainer
           onFilterConditionChange={ (condition) => this.setState({ filter: condition })}
         />
