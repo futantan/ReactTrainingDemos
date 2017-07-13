@@ -21,6 +21,7 @@ class TextFieldSubmit extends React.Component {
           type="submit"
           onClick={(evt) => {
             evt.preventDefault();
+            if (this.state.value.trim() === '') return;
             this.props.addTodoItem(this.state.value);
             this.setState({ value: '' });
           }}
