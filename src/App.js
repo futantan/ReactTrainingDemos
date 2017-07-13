@@ -1,22 +1,36 @@
 import React, { Component } from 'react';
 import './App.css'
 
-const fakeData = {
-  items: [
-    { content: 'hello', status: 'completed' },
-    { content: 'world', status: 'active' },
-    { content: 'how', status: 'active' },
-    { content: 'are', status: 'active' },
-    { content: 'you', status: 'active' },
-  ],
-};
 
-const TextFieldSubmit = (props) => (
-  <form>
-    <input type="text"/>
-    <button type="submit">Add Todo</button>
-  </form>
-);
+class TextFieldSubmit extends React.Component {
+  state = {
+    value: ''
+  };
+
+  render() {
+    return (
+      <form>
+        <input
+          type="text"
+          value={this.state.value}
+          onChange={(evt) => {
+            this.setState({ value: evt.target.value });
+          }}
+        />
+        <button
+          type="submit"
+          onClick={(evt) => {
+            evt.preventDefault();
+            this.props.addTodoItem(this.state.value);
+            this.setState({value: ''});
+          }}
+        >
+          Add Todo
+        </button>
+      </form>
+    )
+  }
+}
 
 const List = (props) => (
   <ul>
@@ -75,15 +89,21 @@ const Filter = (props) => {
 class App extends Component {
   state = {
     filter: 'all',
+    todos: [],
   };
 
   render() {
     return (
       <div>
-        <TextFieldSubmit/>
+        <TextFieldSubmit addTodoItem={(content) => {
+          this.setState({
+            ...this.state,
+            todos: this.state.todos.concat({content, status: 'active'})
+          });
+        }}/>
         <List
           items={
-            fakeData.items.filter((item) => (this.state.filter === 'all') ? true : item.status === this.state.filter)
+            this.state.todos.filter((item) => (this.state.filter === 'all') ? true : item.status === this.state.filter)
           }
         />
         <FilterContainer
