@@ -1,100 +1,8 @@
-import React, { Component } from 'react';
-import './App.css'
-
-
-class TextFieldSubmit extends React.Component {
-  state = {
-    value: ''
-  };
-
-  render() {
-    return (
-      <form>
-        <input
-          type="text"
-          value={this.state.value}
-          onChange={(evt) => {
-            this.setState({ value: evt.target.value });
-          }}
-        />
-        <button
-          type="submit"
-          onClick={(evt) => {
-            evt.preventDefault();
-            if (this.state.value.trim() === '') return;
-            this.props.addTodoItem(this.state.value);
-            this.setState({ value: '' });
-          }}
-        >
-          Add Todo
-        </button>
-      </form>
-    )
-  }
-}
-
-const List = (props) => (
-  <ul>
-    {
-      props.items.map((item, index) =>
-        <Item
-          className={item.status === 'completed' ? 'cross-line' : ''}
-          key={index}
-          uuid={index}
-          content={item.content}
-          onItemClick={(index) => props.toggleTodo(index)}
-        />
-      )
-    }
-  </ul>
-);
-
-const Item = (props) => (
-  <li
-    className={props.className}
-    onClick={() => props.onItemClick(props.uuid)}
-  >
-    {props.content}
-  </li>
-);
-
-class FilterContainer extends React.Component {
-  render() {
-    return (
-      <Filter
-        title="Show:"
-        filters={[
-          { msg: 'All', condition: 'all' },
-          { msg: 'Active', condition: 'active' },
-          { msg: 'Completed', condition: 'completed' },
-        ]}
-        onFilterClick={(evt, condition) => {
-          evt.preventDefault();
-          this.props.onFilterConditionChange(condition);
-        }}
-      />
-    )
-  }
-}
-
-const Filter = (props) => {
-  return (
-    <div>
-      <span>{props.title}</span>
-      {
-        props.filters.map((filter, index) => (
-          <a
-            key={index}
-            href="#"
-            onClick={(evt) => props.onFilterClick(evt, filter.condition)}
-          >
-            {filter.msg}
-          </a>
-        ))
-      }
-    </div>
-  )
-};
+import React, { Component } from "react";
+import "./App.css";
+import TextFieldSubmit from "./components/TextFieldSubmit";
+import List from "./components/List";
+import FilterContainer from "./containers/FilterContainer";
 
 class App extends Component {
   state = {
@@ -131,7 +39,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <TextFieldSubmit addTodoItem={this.handleAddTodoItem}/>
+        <TextFieldSubmit handleSubmit={this.handleAddTodoItem}/>
 
         <List
           items={this.todosWithCondition(this.state.filter)}
