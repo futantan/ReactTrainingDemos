@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './App.css'
 
 const fakeData = {
   items: [
@@ -8,7 +9,6 @@ const fakeData = {
     { content: 'are', status: 'active' },
     { content: 'you', status: 'active' },
   ],
-  filter: 'all',
 };
 
 const TextFieldSubmit = (props) => (
@@ -20,30 +20,75 @@ const TextFieldSubmit = (props) => (
 
 const List = (props) => (
   <ul>
-    {props.items.map((item) => <Item content={item.content}/>)}
+    {
+      props.items.map((item, index) => <Item
+        className={item.status === 'completed' ? 'cross-line' : ''}
+        key={index}
+        content={item.content}/>
+      )
+    }
   </ul>
 );
 
 const Item = (props) => (
-  <li>{props.content}</li>
+  <li className={props.className}>{props.content}</li>
 );
 
-const Filter = (props) => (
-  <div>
-    <span>Show:</span>
-    <a href="">All</a>
-    <a href="">Active</a>
-    <a href="">Completed</a>
-  </div>
-);
+class FilterContainer extends React.Component {
+  render() {
+    return (
+      <Filter
+        title="Show:"
+        filters={[
+          { msg: 'All', condition: 'all' },
+          { msg: 'Active', condition: 'active' },
+          { msg: 'Completed', condition: 'completed' },
+        ]}
+        onFilterClick={(evt, condition) => {
+          evt.preventDefault();
+          this.props.onFilterConditionChange(condition);
+        }}
+      />
+    )
+  }
+}
+
+const Filter = (props) => {
+  return (
+    <div>
+      <span>{props.title}</span>
+      {
+        props.filters.map((filter, index) => (
+          <a
+            key={index}
+            href="#"
+            onClick={(evt) => props.onFilterClick(evt, filter.condition)}
+          >
+            {filter.msg}
+          </a>
+        ))
+      }
+    </div>
+  )
+};
 
 class App extends Component {
+  state = {
+    filter: 'all',
+  };
+
   render() {
     return (
       <div>
         <TextFieldSubmit/>
-        <List items={fakeData.items}/>
-        <Filter/>
+        <List
+          items={
+            fakeData.items.filter((item) => (this.state.filter === 'all') ? true : item.status === this.state.filter)
+          }
+        />
+        <FilterContainer
+          onFilterConditionChange={ (condition) => this.setState({ filter: condition })}
+        />
       </div>
     );
   }
