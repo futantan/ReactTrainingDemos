@@ -1,8 +1,6 @@
 import * as React from "react";
 import Item from "./Item";
 
-
-//TODO: toggleTodo
 const List = (props) => (
   <ul>
     {
@@ -12,7 +10,7 @@ const List = (props) => (
           key={index}
           uuid={index}
           content={item.content}
-          onItemClick={(index) => props.toggleTodo(index)}
+          onItemClick={(index) => props.clickItem(index)}
         />
       )
     }

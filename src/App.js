@@ -43,7 +43,7 @@ class App extends Component {
 
         <List
           items={this.todosWithCondition(this.state.filter)}
-          toggleTodo={this.handleToggleTodo}
+          clickItem={this.handleToggleTodo}
         />
 
         <FilterContainer
