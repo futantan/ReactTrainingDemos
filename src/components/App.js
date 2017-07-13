@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import "./App.css";
-import TextFieldSubmit from "./components/TextFieldSubmit";
-import List from "./components/List";
-import FilterContainer from "./containers/FilterContainer";
+import "../App.css";
+import TextFieldSubmit from "./TextFieldSubmit";
+import List from "./List";
+import FilterContainer from "../containers/FilterContainer";
+
 
 class App extends Component {
   state = {
